@@ -9,7 +9,7 @@
           idx_2         : .word 0
           Get_attay1    : .asciiz  "Get_attay1: Enter 10 num to array_1 Smallest to greatest \n "
           Get_attay2    : .asciiz  "Get_attay2: Enter 10 num to array_2 Smallest to greatest \n "
-          nogood        : .asciiz  " Smaller than the last number entered Try again \n"
+          Print_to_screen        : .asciiz  " Smaller than the last number entered Try again \n"
           p.10          : .asciiz  " New arr in base 10 : "
           p.array1      : .asciiz  " Array 1: " 
           p.array2      : .asciiz  " Array 2: " 
@@ -38,15 +38,15 @@ loop_arr_1 : li $v0 ,5
              li $t4,-4
              add $t6, $t0 ,$t4       
              lw  $t7 ,array_1($t6)
-             blt $t7 ,$t5 ,is_good # t5 < t7  === indx-1>indx
+             blt $t7 ,$t5 ,Running_program # t5 < t7  === indx-1>indx
               
              li $v0 ,4          # print request 1
-             la $a0 , nogood
+             la $a0 , Print_to_screen 
              syscall
              
              j loop_arr_1
              
-is_good :          ## If the number is smaller than the last inserted in arr1
+Running_program : ## If the number is smaller than the last inserted in arr1
              sw  $t5 ,array_1($t0)
              addi $t0 ,$t0 ,4   # its i ++
              sw  $t0,idx_1 
@@ -94,7 +94,7 @@ loop_arr_2 :
             syscall
             
              li $t2 ,0
-loop_arr_22 : 
+loop_arr_22: 
              li $v0 ,5
              syscall           # call num 
             
@@ -106,15 +106,15 @@ loop_arr_22 :
              li $t4,-4
              add $t6, $t0 ,$t4       
              lw  $t7 ,array_2($t6)
-             blt $t7 ,$t5 ,is_good2 # t5 < t7  === indx-1>indx
+             blt $t7 ,$t5 ,program_running # t5 < t7  === indx-1>indx
               
              li $v0 ,4          # print request 2
-             la $a0 , nogood
+             la $a0 , Print_to_screen 
              syscall
              
              j loop_arr_22
              
-is_good2 :          ## If the number is smaller than the last inserted in arr1
+program_running: ## If the number is smaller than the last inserted in arr1
              sw  $t5 ,array_2($t0)
              addi $t0 ,$t0 ,4   # its i ++
              sw  $t0,idx_2 
@@ -143,7 +143,7 @@ pint_arr_on:
                  addi $t0 $zero ,0     
                  lw $t1 ,idx_2           
                      
-loop_print_2 :   beq $t0 ,$t1 ,Cutting_of_arrays  # idx run on arr to arr.length-1 and print all num in 
+loop_print_2:   beq $t0 ,$t1 ,Cutting_of_arrays  # idx run on arr to arr.length-1 and print all num in 
                  lw  $t7 ,array_2($t0)   
                  addi $t0 ,$t0,4       
                  move $a0 ,$t7         
@@ -200,11 +200,11 @@ yotr_gadol:
                      j lpp
                       
 arr1_null:                             #arr 1 is null print all num in arr 2
-                   bne $t1 ,$s0,gogo  # idx i arr 2=!null go label els go end 
+                   bne $t1 ,$s0,no_error  # idx i arr 2=!null go label els go end 
                    
                     j  end
                    
-gogo:                                    
+no_error:                                    
                   lw $t3,array_2($t1)   #print arr 2
                  
                   li $v0 ,1
@@ -219,11 +219,11 @@ gogo:
                   j arr1_null
                      
 arr2_null:                                 #arr2 is full print arr 1 
-                    bne $t1 ,$s0,gogo2     # if idx in arr1 =! null go label and print arr 
+                    bne $t1 ,$s0,no_error_in_arr_one     # if idx in arr1 =! null go label and print arr 
                    
                      j  end
                    
-gogo2:               
+no_error_in_arr_one:               
                   lw $t2,array_1($t0)
                  
                   li $v0 ,1
